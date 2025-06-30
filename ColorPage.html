@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Page</title>
+    <style>
+        /* 頁面基本樣式 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            margin: 0;
+        }
+        .container {
+            padding: 20px 40px;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 15px 0;
+        }
+        /* 連結樣式，與 index.html 保持一致 */
+        a {
+            font-size: 30px;
+            text-decoration: none;
+            color: #007BFF;
+            transition: color 0.3s;
+            cursor: pointer; /* 讓滑鼠變成手形，提示可點擊 */
+        }
+        a:hover {
+            color: #0056b3;
+        }
+
+        /* 全螢幕圖片檢視器樣式 */
+        #fullscreen-viewer {
+            position: fixed; /* 固定位置，覆蓋整個視窗 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 1); /* 全黑背景 */
+            display: none; /* 預設隱藏 */
+            justify-content: center; /* 水平置中 */
+            align-items: center; /* 垂直置中 */
+            z-index: 9999; /* 確保在最上層 */
+            cursor: pointer; /* 提示使用者可以點擊關閉 */
+        }
+
+        #fullscreen-viewer img {
+            max-width: 100vw; /* 圖片最大寬度為視窗寬度 */
+            max-height: 100vh; /* 圖片最大高度為視窗高度 */
+            object-fit: contain; /* 保持圖片比例，完整顯示 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Color Page</h1>
+        <ul>
+            <!-- 這些連結會觸發 JavaScript 函數 -->
+            <li><a onclick="showSingleImage('White.png')">White</a></li>
+            <li><a onclick="showSingleImage('Black.png')">Black</a></li>
+            <li><a onclick="showSingleImage('Red.png')">Red</a></li>
+            <li><a onclick="showSingleImage('Green.png')">Green</a></li>
+            <li><a onclick="showSingleImage('Blue.png')">Blue</a></li>
+            <li><a onclick="startRolling()">Rolling</a></li>
+            <!-- 這個是標準的頁面跳轉連結 -->
+            <li><a href="index.html">Index</a></li>
+        </ul>
+    </div>
+
+    <!-- 全螢幕圖片檢視器 HTML 結構 -->
+    <div id="fullscreen-viewer">
+        <img id="fullscreen-image" src="" alt="Fullscreen Image">
+    </div>
+
+    <script>
+        // --- DOM 元素獲取 ---
+        const viewer = document.getElementById('fullscreen-viewer');
+        const fullscreenImage = document.getElementById('fullscreen-image');
+
+        // --- 變數定義 ---
+        // Rolling 功能要用到的圖片順序
+        const rollingImages = ['White.png', 'Black.png', 'Red.png', 'Green.png', 'Blue.png'];
+        let currentRollingIndex = 0;
+        let isRollingMode = false; // 判斷當前是否為 Rolling 模式
+
+        // --- 函數定義 ---
+
+        /**
+         * 顯示單張圖片
+         * @param {string} imageSrc - 圖片的路徑
+         */
+        function showSingleImage(imageSrc) {
+            isRollingMode = false; // 進入單張圖片模式
+            fullscreenImage.src = imageSrc;
+            viewer.style.display = 'flex'; // 顯示檢視器
+        }
+
+        /**
+         * 開始 Rolling 播放
+         */
+        function startRolling() {
+            isRollingMode = true; // 進入 Rolling 模式
+            currentRollingIndex = 0; // 重置索引
+            fullscreenImage.src = rollingImages[currentRollingIndex];
+            viewer.style.display = 'flex';
+        }
+
+        /**
+         * 隱藏檢視器並重置狀態
+         */
+        function hideViewer() {
+            viewer.style.display = 'none';
+            fullscreenImage.src = ''; // 清空圖片來源，避免不必要的載入
+            isRollingMode = false;
+        }
+
+        // --- 事件監聽 ---
+
+        // 為全螢幕檢視器加上點擊事件
+        viewer.addEventListener('click', function() {
+            if (isRollingMode) {
+                // 如果是 Rolling 模式，則切換到下一張
+                currentRollingIndex++;
+                if (currentRollingIndex < rollingImages.length) {
+                    // 如果還有下一張圖片，就更新 src
+                    fullscreenImage.src = rollingImages[currentRollingIndex];
+                } else {
+                    // 如果已經是最後一張，就關閉檢視器
+                    hideViewer();
+                }
+            } else {
+                // 如果是單張圖片模式，直接關閉
+                hideViewer();
+            }
+        });
+    </script>
+
+</body>
+</html>
