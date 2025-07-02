@@ -1,59 +1,68 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GrayLevel L0 to L255</title>
+<title>gamma.html</title>
 <style>
-    body {
-        background-color: rgb(0, 0, 0);
-        margin: 0;
-        height: 100vh;
-        color: gray;
-        font-family: sans-serif;
-    }
-
-    #brightness {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 60px;
-    }
-
-    #back-link {
-        position: absolute;
-        bottom: 10px;
-        left: 10px;
-        font-size: 60px;
-    }
-
-    a {
-        color: gray;
-        text-decoration: none;
-    }
+  body {
+    background-color: #000;
+    margin: 0;
+    overflow: hidden;
+    color: #fff;
+    font-family: monospace;
+    font-size: 60px;
+  }
+  #brightness {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  #backLink {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+  }
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 60px;
+  }
 </style>
 </head>
 <body>
 
 <div id="brightness">L0</div>
-
-<a id="back-link" href="Index.html">Back to index page</a>
+<a id="backLink" href="Index.html">Back to gamma</a>
 
 <script>
-    let grayValue = 0;
-    const body = document.body;
-    const brightnessDiv = document.getElementById('brightness');
+  let level = 0;
+  const brightnessDiv = document.getElementById('brightness');
 
-    document.addEventListener('click', function() {
-        grayValue++;
-        if (grayValue > 255) {
-            grayValue = 0;
-        }
+  function updateColor() {
+    const colorValue = `rgb(${level}, ${level}, ${level})`;
+    document.body.style.backgroundColor = colorValue;
+    brightnessDiv.textContent = `L${level}`;
 
-        const newColor = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
-        body.style.backgroundColor = newColor;
-        brightnessDiv.textContent = `L${grayValue}`;
-    });
+    if (level > 128) {
+        document.body.style.color = '#000';
+        document.getElementById('backLink').style.color = '#000';
+    } else {
+        document.body.style.color = '#fff';
+        document.getElementById('backLink').style.color = '#fff';
+    }
+  }
+
+  function handleInteraction() {
+    level++;
+    if (level > 255) {
+      level = 0;
+    }
+    updateColor();
+  }
+
+  document.addEventListener('click', handleInteraction);
+  document.addEventListener('keydown', handleInteraction);
 </script>
 
 </body>
